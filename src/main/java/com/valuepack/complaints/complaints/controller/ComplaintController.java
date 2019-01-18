@@ -34,8 +34,8 @@ public class ComplaintController {
                     compliantResponse.setMessage("Complaint Updated Successfully");
                 } else {
                     compliantResponse.setMessage("Complaint Not Found with given Id");
+                    return compliantResponse;
                 }
-                return compliantResponse;
             } else {
                 complaints = new Complaints();
                 compliantResponse.setMessage("Complaint Saved Successfully");
@@ -64,7 +64,8 @@ public class ComplaintController {
             }
              complaints = complaintsRepository.save(complaints);
 
-            compliantResponse.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            compliantResponse.setStatus(HttpStatus.OK.value());
+            compliantResponse.setPayLoad(complaints);
             return compliantResponse;
 
         } else {

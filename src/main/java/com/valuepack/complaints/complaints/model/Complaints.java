@@ -33,7 +33,7 @@ public class Complaints extends BaseEntity {
     private Long appUser;
 
     @NotNull
-    private boolean complaintStatus = Boolean.FALSE;
+    private boolean complaintStatus;
 
     public Long getId() {
         return id;
