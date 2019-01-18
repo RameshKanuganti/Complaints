@@ -9,5 +9,5 @@ public interface ComplaintsRepository extends JpaRepository<Complaints, Long> {
 
     List<Complaints> findAll();
 
-    Complaints findTop1ByComplaints(Long complaint);
+    Complaints find1ById(Long complaint);
 }

@@ -20,31 +20,35 @@ public class ComplaintController {
     ComplaintsRepository complaintsRepository;
 
     @PutMapping("/complaints")
-    public CompliantResponse saveComplaint(@RequestHeader("X-Authorization") final String xAuth, final @RequestBody ComplaintsDTO complaintsDTO) throws Exception {
+    public CompliantResponse saveComplaint(@RequestHeader("X-Authorization") final String xAuth, @RequestBody ComplaintsDTO complaintsDTO) throws Exception {
 
+        CompliantResponse compliantResponse = new CompliantResponse();
         if (complaintsDTO != null) {
-
-            Complaints complaints = new Complaints();
+            Complaints complaints;
+            if (!StringUtils.isEmpty(complaintsDTO.getId())) {
+                complaints = complaintsRepository.find1ById(complaintsDTO.getId());
+                complaints.setComplaintType(complaintsDTO.getComplaintType());
+                compliantResponse.setMessage("Complaint Updated Successfully");
+                return compliantResponse;
+            } else {
+                complaints = new Complaints();
+                compliantResponse.setMessage("Complaint Saved Successfully");
+            }
             if (!StringUtils.isEmpty(complaintsDTO.getComplaintType())) {
                 complaints.setComplaintType(complaintsDTO.getComplaintType());
             }
-
             if (!StringUtils.isEmpty(complaintsDTO.getComplaintSeverity())) {
                 complaints.setComplaintSeverity(complaintsDTO.getComplaintSeverity());
             }
-
             if (!StringUtils.isEmpty(complaintsDTO.getSubject())) {
                 complaints.setSubject(complaintsDTO.getSubject());
             }
-
             if (!StringUtils.isEmpty(complaintsDTO.getDescription())) {
                 complaints.setDescription(complaintsDTO.getDescription());
             }
-
             if (!StringUtils.isEmpty(complaintsDTO.getFilePath())) {
                 complaints.setFilePath(complaintsDTO.getFilePath());
             }
-
             if (!StringUtils.isEmpty(complaintsDTO.getFranchise())) {
                 complaints.setFranchise(complaintsDTO.getFranchise());
             }
@@ -52,13 +56,14 @@ public class ComplaintController {
                 complaints.setUser(complaintsDTO.getUser());
             }
             complaintsRepository.save(complaints);
+            compliantResponse.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            return compliantResponse;
+
+        } else {
+            compliantResponse.setMessage("Invalid Data");
+            compliantResponse.setStatus(HttpStatus.BAD_REQUEST.value());
+            return compliantResponse;
         }
-
-        CompliantResponse compliantResponse = new CompliantResponse();
-        compliantResponse.setMessage("Complaint Saved Successfully");
-        compliantResponse.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-
-        return compliantResponse;
     }
 
     @GetMapping("/complaints")
