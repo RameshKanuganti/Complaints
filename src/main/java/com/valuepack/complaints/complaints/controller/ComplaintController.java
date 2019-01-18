@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class ComplaintController {
@@ -19,21 +20,27 @@ public class ComplaintController {
     @Autowired
     ComplaintsRepository complaintsRepository;
 
-    @PutMapping("/complaints")
+    @PostMapping("/complaints")
     public CompliantResponse saveComplaint(@RequestHeader("X-Authorization") final String xAuth, @RequestBody ComplaintsDTO complaintsDTO) throws Exception {
 
         CompliantResponse compliantResponse = new CompliantResponse();
         if (complaintsDTO != null) {
             Complaints complaints;
-            if (!StringUtils.isEmpty(complaintsDTO.getId())) {
-                complaints = complaintsRepository.find1ById(complaintsDTO.getId());
-                complaints.setComplaintType(complaintsDTO.getComplaintType());
-                compliantResponse.setMessage("Complaint Updated Successfully");
+            if (!StringUtils.isEmpty(complaintsDTO.getId()) && complaintsDTO.getId() > 0) {
+                Optional<Complaints> optionalComplaint = complaintsRepository.findById(complaintsDTO.getId());
+                if (optionalComplaint.isPresent()) {
+                    complaints = optionalComplaint.get();
+                    complaints.setComplaintType(complaintsDTO.getComplaintType());
+                    compliantResponse.setMessage("Complaint Updated Successfully");
+                } else {
+                    compliantResponse.setMessage("Complaint Not Found with given Id");
+                }
                 return compliantResponse;
             } else {
                 complaints = new Complaints();
                 compliantResponse.setMessage("Complaint Saved Successfully");
             }
+
             if (!StringUtils.isEmpty(complaintsDTO.getComplaintType())) {
                 complaints.setComplaintType(complaintsDTO.getComplaintType());
             }
@@ -53,9 +60,10 @@ public class ComplaintController {
                 complaints.setFranchise(complaintsDTO.getFranchise());
             }
             if (!StringUtils.isEmpty(complaintsDTO.getUser())) {
-                complaints.setUser(complaintsDTO.getUser());
+                complaints.setAppUser(complaintsDTO.getUser());
             }
-            complaintsRepository.save(complaints);
+             complaints = complaintsRepository.save(complaints);
+
             compliantResponse.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             return compliantResponse;
 
@@ -72,7 +80,7 @@ public class ComplaintController {
 
         CompliantResponse compliantResponse = new CompliantResponse();
 
-        if (StringUtils.isEmpty(complaintsList) && complaintsList.size() > 0) {
+        if (!StringUtils.isEmpty(complaintsList) && complaintsList.size() > 0) {
 
             List<ComplaintsDTO> complaintsDTOList = new ArrayList<>();
             for (Complaints complaints : complaintsList) {
@@ -91,7 +99,7 @@ public class ComplaintController {
             }
             compliantResponse.setMessage("Query returned successfully");
             compliantResponse.setStatus(HttpStatus.OK.value());
-            compliantResponse.setResultObject(complaintsDTOList);
+            compliantResponse.setPayLoad(complaintsDTOList);
             return compliantResponse;
         }
         compliantResponse.setMessage("No Complaints Found");

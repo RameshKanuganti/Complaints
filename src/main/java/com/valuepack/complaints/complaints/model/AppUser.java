@@ -3,8 +3,8 @@ package com.valuepack.complaints.complaints.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "compliant_status")
-public class CompliantStatus extends BaseEntity {
+@Table(name = "app_user")
+public class AppUser extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

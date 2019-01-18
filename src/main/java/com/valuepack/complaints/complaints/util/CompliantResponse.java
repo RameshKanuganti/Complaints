@@ -1,7 +1,5 @@
 package com.valuepack.complaints.complaints.util;
 
-import org.springframework.http.HttpStatus;
-
 import java.sql.Timestamp;
 import java.util.Date;
 
@@ -12,14 +10,14 @@ public class CompliantResponse {
     private String error;
     private String message;
     private String path;
-    private Object resultObject;
+    private Object payLoad;
 
-    public CompliantResponse(int status, String error, String message, String path, Object resultObject) {
+    public CompliantResponse(int status, String error, String message, String path, Object payLoad) {
         this.status = status;
         this.error = error;
         this.message = message;
         this.path = path;
-        this.resultObject = resultObject;
+        this.payLoad = payLoad;
         this.timestamp = new Timestamp(new Date().getTime()).getTime();
     }
 
@@ -59,12 +57,12 @@ public class CompliantResponse {
         this.path = path;
     }
 
-    public Object getResultObject() {
-        return resultObject;
+    public Object getPayLoad() {
+        return payLoad;
     }
 
-    public void setResultObject(Object resultObject) {
-        this.resultObject = resultObject;
+    public void setPayLoad(Object payLoad) {
+        this.payLoad = payLoad;
     }
 
     public int getStatus() {
@@ -83,7 +81,7 @@ public class CompliantResponse {
                 ", error='" + error + '\'' +
                 ", message='" + message + '\'' +
                 ", path='" + path + '\'' +
-                ", resultObject=" + resultObject +
+                ", payLoad=" + payLoad +
                 '}';
     }
 

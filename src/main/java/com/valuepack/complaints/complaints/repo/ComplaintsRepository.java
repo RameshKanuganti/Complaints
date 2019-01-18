@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface ComplaintsRepository extends JpaRepository<Complaints, Long> {
 
-    List<Complaints> findAll();
 
-    Complaints find1ById(Long complaint);
+
+
 }

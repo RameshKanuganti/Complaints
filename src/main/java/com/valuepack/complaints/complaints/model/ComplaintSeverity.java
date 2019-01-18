@@ -2,12 +2,10 @@ package com.valuepack.complaints.complaints.model;
 
 import org.hibernate.validator.constraints.UniqueElements;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
+@Table(name = "complaint_severity")
 public class ComplaintSeverity extends BaseEntity {
 
     @Id

@@ -4,6 +4,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
+@Table(name = "complaints")
 public class Complaints extends BaseEntity {
 
     @Id
@@ -29,7 +30,7 @@ public class Complaints extends BaseEntity {
     private Long franchise;
 
     @NotNull
-    private Long user;
+    private Long appUser;
 
     @NotNull
     private boolean complaintStatus = Boolean.FALSE;
@@ -98,12 +99,12 @@ public class Complaints extends BaseEntity {
         this.franchise = franchise;
     }
 
-    public Long getUser() {
-        return user;
+    public Long getAppUser() {
+        return appUser;
     }
 
-    public void setUser(Long user) {
-        this.user = user;
+    public void setAppUser(Long appUser) {
+        this.appUser = appUser;
     }
 
     public boolean isComplaintStatus() {

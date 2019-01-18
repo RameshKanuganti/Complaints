@@ -8,7 +8,4 @@ import java.util.List;
 
 public interface ComplaintSeverityRepository extends JpaRepository<ComplaintSeverity, Long> {
 
-    List<ComplaintSeverity> findAll();
-
-    ComplaintSeverity findTop1ByComplaints(Long complaint);
 }

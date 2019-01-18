@@ -2,12 +2,18 @@ package com.valuepack.complaints.complaints.model;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.MappedSuperclass;
+import java.io.Serializable;
 import java.sql.Timestamp;
 
-public class BaseEntity {
+@MappedSuperclass
+@EntityListeners({AuditingEntityListener.class})
+public class BaseEntity implements Serializable {
 
     @CreationTimestamp
     @Column(updatable = false, nullable = false)

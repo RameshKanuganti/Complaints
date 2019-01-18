@@ -8,7 +8,4 @@ import java.util.List;
 
 public interface ComplaintTypeRepository extends JpaRepository<ComplaintType, Long> {
 
-    List<ComplaintType> findAll();
-
-    Complaints findTop1ByComplaints(Long complaint);
 }
