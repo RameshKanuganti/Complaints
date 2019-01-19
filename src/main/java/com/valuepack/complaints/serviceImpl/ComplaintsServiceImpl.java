@@ -59,7 +59,31 @@ public class ComplaintsServiceImpl implements ComplaintsServiceI {
 
     @Override
     public VehicleResponse updateComplaint(ComplaintsDTO complaintsDTO) {
-        return null;
+
+        VehicleResponse vehicleResponse = new VehicleResponse();
+        if (complaintsDTO != null) {
+            Complaints complaints;
+            if (!StringUtils.isEmpty(complaintsDTO.getId()) && complaintsDTO.getId() > 0) {
+                Optional<Complaints> optionalComplaint = complaintsRepository.findById(complaintsDTO.getId());
+                if (optionalComplaint.isPresent()) {
+                    complaints = optionalComplaint.get();
+                    saveComplaintMapping(complaintsDTO, complaints);
+                    vehicleResponse.setStatus(HttpStatus.OK.value());
+                    vehicleResponse.setMessage(messageService.getMessage("complaint.update"));
+                } else {
+                    vehicleResponse.setStatus(HttpStatus.NOT_FOUND.value());
+                    vehicleResponse.setMessage(messageService.getMessage("complaint.not.found"));
+                }
+                return vehicleResponse;
+            }
+            vehicleResponse.setMessage(messageService.getMessage("invalid.data"));
+            vehicleResponse.setStatus(HttpStatus.BAD_REQUEST.value());
+            return vehicleResponse;
+        } else {
+            vehicleResponse.setMessage(messageService.getMessage("invalid.data"));
+            vehicleResponse.setStatus(HttpStatus.BAD_REQUEST.value());
+            return vehicleResponse;
+        }
     }
 
     @Override
@@ -96,7 +120,17 @@ public class ComplaintsServiceImpl implements ComplaintsServiceI {
 
     @Override
     public VehicleResponse deleteComplaint(Long complaintId) {
-        return null;
+        VehicleResponse vehicleResponse = new VehicleResponse();
+        if (complaintId > 0) {
+            Complaints complaints = complaintsRepository.getOne(complaintId);
+            complaintsRepository.delete(complaints);
+            vehicleResponse.setStatus(HttpStatus.OK.value());
+            vehicleResponse.setMessage(messageService.getMessage("delete.success"));
+        } else {
+            vehicleResponse.setStatus(HttpStatus.BAD_REQUEST.value());
+            vehicleResponse.setMessage(messageService.getMessage("invalid.data"));
+        }
+        return vehicleResponse;
     }
 
     private Complaints saveComplaintMapping(ComplaintsDTO complaintsDTO, Complaints complaints) {
