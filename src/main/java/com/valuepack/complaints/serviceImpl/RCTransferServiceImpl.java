@@ -68,6 +68,7 @@ public class RCTransferServiceImpl implements RCTransferServiceI {
             List<RCTransferDTO> rcTransferDTOList = new ArrayList<>();
             for (RCTransfer rcTransfer : rcTransferList) {
                 RCTransferDTO rcTransferDTO = new RCTransferDTO();
+                rcTransferDTO.setId(rcTransfer.getId());
                 rcTransferDTO.setVehicleNumber(rcTransfer.getVehicleNumber());
                 rcTransferDTO.setDateOfSale(rcTransfer.getDateOfSale());
                 rcTransferDTO.setHypothecationNOCRecorded(rcTransfer.getHypothecationNOCRecorded());
@@ -123,10 +124,15 @@ public class RCTransferServiceImpl implements RCTransferServiceI {
     public VehicleResponse deleteRCTransferById(Long rcId) {
         VehicleResponse vehicleResponse = new VehicleResponse();
         if (rcId > 0) {
-            RCTransfer rcTransfer = rcTransferRepository.getOne(rcId);
-            rcTransferRepository.delete(rcTransfer);
-            vehicleResponse.setStatus(HttpStatus.OK.value());
-            vehicleResponse.setMessage(messageService.getMessage("delete.success"));
+            Optional<RCTransfer> optionalRCTransfer = rcTransferRepository.findById(rcId);
+            if (optionalRCTransfer.isPresent()) {
+                RCTransfer rcTransfer = optionalRCTransfer.get();
+                rcTransferRepository.delete(rcTransfer);
+                vehicleResponse.setStatus(HttpStatus.OK.value());
+                vehicleResponse.setMessage(messageService.getMessage("delete.success"));
+            }
+            vehicleResponse.setStatus(HttpStatus.BAD_REQUEST.value());
+            vehicleResponse.setMessage(messageService.getMessage("invalid.data"));
         } else {
             vehicleResponse.setStatus(HttpStatus.BAD_REQUEST.value());
             vehicleResponse.setMessage(messageService.getMessage("invalid.data"));

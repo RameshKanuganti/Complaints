@@ -122,10 +122,15 @@ public class ComplaintsServiceImpl implements ComplaintsServiceI {
     public VehicleResponse deleteComplaint(Long complaintId) {
         VehicleResponse vehicleResponse = new VehicleResponse();
         if (complaintId > 0) {
-            Complaints complaints = complaintsRepository.getOne(complaintId);
-            complaintsRepository.delete(complaints);
-            vehicleResponse.setStatus(HttpStatus.OK.value());
-            vehicleResponse.setMessage(messageService.getMessage("delete.success"));
+            Optional<Complaints> optionalComplaint = complaintsRepository.findById(complaintId);
+            if (optionalComplaint.isPresent()) {
+                Complaints complaints = optionalComplaint.get();
+                complaintsRepository.delete(complaints);
+                vehicleResponse.setStatus(HttpStatus.OK.value());
+                vehicleResponse.setMessage(messageService.getMessage("delete.success"));
+            }
+            vehicleResponse.setStatus(HttpStatus.BAD_REQUEST.value());
+            vehicleResponse.setMessage(messageService.getMessage("invalid.data"));
         } else {
             vehicleResponse.setStatus(HttpStatus.BAD_REQUEST.value());
             vehicleResponse.setMessage(messageService.getMessage("invalid.data"));
