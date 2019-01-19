@@ -1,6 +1,6 @@
 buildscript {
 	ext {
-		springBootVersion = '2.1.2.RELEASE'
+		springBootVersion = '2.0.5.RELEASE'
 	}
 	repositories {
 		mavenCentral()
@@ -33,9 +33,9 @@ dependencies {
 	runtime 'org.postgresql:postgresql:42.1.1'
 	// https://mvnrepository.com/artifact/com.h2database/h2
 	//testCompile group: 'com.h2database', name: 'h2', version: '1.4.196'
-	compile("com.h2database:h2:1.4.196")
+	//compile("com.h2database:h2:1.4.196")
 	// https://mvnrepository.com/artifact/org.hibernate/hibernate-entitymanager
-	compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: '5.1.10.Final'
+	//compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: '5.1.10.Final'
 
 
 }
