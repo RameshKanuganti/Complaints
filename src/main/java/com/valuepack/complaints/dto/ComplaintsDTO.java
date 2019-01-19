@@ -1,12 +1,5 @@
 package com.valuepack.complaints.dto;
 
-import com.valuepack.complaints.model.ComplaintSeverity;
-import com.valuepack.complaints.model.ComplaintType;
-import com.valuepack.complaints.model.CompliantStatus;
-
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 
 public class ComplaintsDTO {

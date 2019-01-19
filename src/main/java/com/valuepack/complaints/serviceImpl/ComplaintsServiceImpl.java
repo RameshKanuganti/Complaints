@@ -25,67 +25,48 @@ public class ComplaintsServiceImpl implements ComplaintsServiceI {
     Messages messageService;
 
     @Override
-    public ComplaintResponse saveComplaint(ComplaintsDTO complaintsDTO) {
+    public VehicleResponse saveComplaint(ComplaintsDTO complaintsDTO) {
 
-        ComplaintResponse complaintResponse = new ComplaintResponse();
+        VehicleResponse vehicleResponse = new VehicleResponse();
         if (complaintsDTO != null) {
             Complaints complaints;
             if (!StringUtils.isEmpty(complaintsDTO.getId()) && complaintsDTO.getId() > 0) {
                 Optional<Complaints> optionalComplaint = complaintsRepository.findById(complaintsDTO.getId());
                 if (optionalComplaint.isPresent()) {
                     complaints = optionalComplaint.get();
-                    complaintResponse.setMessage(messageService.getMessage("complaint.update"));
+                    saveComplaintMapping(complaintsDTO, complaints);
+                    vehicleResponse.setStatus(HttpStatus.OK.value());
+                    vehicleResponse.setMessage(messageService.getMessage("complaint.update"));
                 } else {
-                    complaintResponse.setMessage(messageService.getMessage("complaint.not.found"));
-                    return complaintResponse;
+                    vehicleResponse.setStatus(HttpStatus.NOT_FOUND.value());
+                    vehicleResponse.setMessage(messageService.getMessage("complaint.not.found"));
                 }
+                return vehicleResponse;
             } else {
                 complaints = new Complaints();
-                complaintResponse.setMessage(messageService.getMessage("complaint.save"));
+                saveComplaintMapping(complaintsDTO, complaints);
+                vehicleResponse.setStatus(HttpStatus.OK.value());
+                vehicleResponse.setPayLoad(complaints);
+                vehicleResponse.setMessage(messageService.getMessage("complaint.save"));
+                return vehicleResponse;
             }
-
-            if (!StringUtils.isEmpty(complaintsDTO.getComplaintType())) {
-                complaints.setComplaintType(ComplaintTypeEnum.valueOf(complaintsDTO.getComplaintType()));
-            }
-            if (!StringUtils.isEmpty(complaintsDTO.getComplaintSeverity())) {
-                complaints.setComplaintSeverity(ComplaintSeverityEnum.valueOf(complaintsDTO.getComplaintSeverity()));
-            }
-            if (!StringUtils.isEmpty(complaintsDTO.getComplaintStatus())) {
-                complaints.setComplaintStatus(ComplaintStatusEnum.valueOf(complaintsDTO.getComplaintStatus()));
-            }
-            if (!StringUtils.isEmpty(complaintsDTO.getSubject())) {
-                complaints.setSubject(complaintsDTO.getSubject());
-            }
-            if (!StringUtils.isEmpty(complaintsDTO.getDescription())) {
-                complaints.setDescription(complaintsDTO.getDescription());
-            }
-            if (!StringUtils.isEmpty(complaintsDTO.getFilePath())) {
-                complaints.setFilePath(complaintsDTO.getFilePath());
-            }
-            if (!StringUtils.isEmpty(complaintsDTO.getFranchise())) {
-                complaints.setFranchise(complaintsDTO.getFranchise());
-            }
-            if (!StringUtils.isEmpty(complaintsDTO.getAppUser())) {
-                complaints.setAppUser(complaintsDTO.getAppUser());
-            }
-            complaints = complaintsRepository.save(complaints);
-
-            complaintResponse.setStatus(HttpStatus.OK.value());
-            complaintResponse.setPayLoad(complaints);
-            return complaintResponse;
-
         } else {
-            complaintResponse.setMessage(messageService.getMessage("invalid.data"));
-            complaintResponse.setStatus(HttpStatus.BAD_REQUEST.value());
-            return complaintResponse;
+            vehicleResponse.setMessage(messageService.getMessage("invalid.data"));
+            vehicleResponse.setStatus(HttpStatus.BAD_REQUEST.value());
+            return vehicleResponse;
         }
     }
 
     @Override
-    public ComplaintResponse getAllComplaints() {
+    public VehicleResponse updateComplaint(ComplaintsDTO complaintsDTO) {
+        return null;
+    }
+
+    @Override
+    public VehicleResponse getAllComplaints() {
 
         List<Complaints> complaintsList = complaintsRepository.findAll();
-        ComplaintResponse complaintResponse = new ComplaintResponse();
+        VehicleResponse vehicleResponse = new VehicleResponse();
         if (!StringUtils.isEmpty(complaintsList) && complaintsList.size() > 0) {
             List<ComplaintsDTO> complaintsDTOList = new ArrayList<>();
             for (Complaints complaints : complaintsList) {
@@ -103,13 +84,48 @@ public class ComplaintsServiceImpl implements ComplaintsServiceI {
                 complaintsDTO.setAppUser(2l);
                 complaintsDTOList.add(complaintsDTO);
             }
-            complaintResponse.setMessage(messageService.getMessage("success.message"));
-            complaintResponse.setStatus(HttpStatus.OK.value());
-            complaintResponse.setPayLoad(complaintsDTOList);
-            return complaintResponse;
+            vehicleResponse.setMessage(messageService.getMessage("success.message"));
+            vehicleResponse.setStatus(HttpStatus.OK.value());
+            vehicleResponse.setPayLoad(complaintsDTOList);
+            return vehicleResponse;
         }
-        complaintResponse.setMessage(messageService.getMessage("complaint.no"));
-        complaintResponse.setStatus(HttpStatus.OK.value());
-        return complaintResponse;
+        vehicleResponse.setMessage(messageService.getMessage("complaint.no"));
+        vehicleResponse.setStatus(HttpStatus.OK.value());
+        return vehicleResponse;
+    }
+
+    @Override
+    public VehicleResponse deleteComplaint(Long complaintId) {
+        return null;
+    }
+
+    private Complaints saveComplaintMapping(ComplaintsDTO complaintsDTO, Complaints complaints) {
+
+        if (!StringUtils.isEmpty(complaintsDTO.getComplaintType())) {
+            complaints.setComplaintType(ComplaintTypeEnum.valueOf(complaintsDTO.getComplaintType()));
+        }
+        if (!StringUtils.isEmpty(complaintsDTO.getComplaintSeverity())) {
+            complaints.setComplaintSeverity(ComplaintSeverityEnum.valueOf(complaintsDTO.getComplaintSeverity()));
+        }
+        if (!StringUtils.isEmpty(complaintsDTO.getComplaintStatus())) {
+            complaints.setComplaintStatus(ComplaintStatusEnum.valueOf(complaintsDTO.getComplaintStatus()));
+        }
+        if (!StringUtils.isEmpty(complaintsDTO.getSubject())) {
+            complaints.setSubject(complaintsDTO.getSubject());
+        }
+        if (!StringUtils.isEmpty(complaintsDTO.getDescription())) {
+            complaints.setDescription(complaintsDTO.getDescription());
+        }
+        if (!StringUtils.isEmpty(complaintsDTO.getFilePath())) {
+            complaints.setFilePath(complaintsDTO.getFilePath());
+        }
+        if (!StringUtils.isEmpty(complaintsDTO.getFranchise())) {
+            complaints.setFranchise(complaintsDTO.getFranchise());
+        }
+        if (!StringUtils.isEmpty(complaintsDTO.getAppUser())) {
+            complaints.setAppUser(complaintsDTO.getAppUser());
+        }
+        complaints = complaintsRepository.save(complaints);
+        return complaints;
     }
 }

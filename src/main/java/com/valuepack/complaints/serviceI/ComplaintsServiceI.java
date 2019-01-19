@@ -1,11 +1,15 @@
 package com.valuepack.complaints.serviceI;
 
 import com.valuepack.complaints.dto.ComplaintsDTO;
-import com.valuepack.complaints.util.ComplaintResponse;
+import com.valuepack.complaints.util.VehicleResponse;
 
 public interface ComplaintsServiceI {
 
-    ComplaintResponse saveComplaint(ComplaintsDTO complaintsDTO);
+    VehicleResponse saveComplaint(ComplaintsDTO complaintsDTO);
 
-    ComplaintResponse getAllComplaints();
+    VehicleResponse updateComplaint(ComplaintsDTO complaintsDTO);
+
+    VehicleResponse getAllComplaints();
+
+    VehicleResponse deleteComplaint(Long complaintId);
 }

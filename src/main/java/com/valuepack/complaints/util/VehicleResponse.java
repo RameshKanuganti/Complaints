@@ -3,7 +3,7 @@ package com.valuepack.complaints.util;
 import java.sql.Timestamp;
 import java.util.Date;
 
-public class ComplaintResponse {
+public class VehicleResponse {
 
     private long timestamp;
     private int status;
@@ -12,7 +12,7 @@ public class ComplaintResponse {
     private String path;
     private Object payLoad;
 
-    public ComplaintResponse(int status, String error, String message, String path, Object payLoad) {
+    public VehicleResponse(int status, String error, String message, String path, Object payLoad) {
         this.status = status;
         this.error = error;
         this.message = message;
@@ -21,7 +21,7 @@ public class ComplaintResponse {
         this.timestamp = new Timestamp(new Date().getTime()).getTime();
     }
 
-    public ComplaintResponse() {
+    public VehicleResponse() {
         this.timestamp = new Timestamp(new Date().getTime()).getTime();
     }
 
