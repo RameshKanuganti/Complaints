@@ -25,7 +25,7 @@ public class ComplaintController {
         CompliantResponse compliantResponse = new CompliantResponse();
         if (complaintsDTO != null) {
             Complaints complaints;
-            if (!StringUtils.isEmpty(complaintsDTO.getId())) {
+            if (!StringUtils.isEmpty(complaintsDTO.getId()) && complaintsDTO.getId() > 0) {
                 complaints = complaintsRepository.find1ById(complaintsDTO.getId());
                 complaints.setComplaintType(complaintsDTO.getComplaintType());
                 compliantResponse.setMessage("Complaint Updated Successfully");
