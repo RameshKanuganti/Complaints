@@ -37,7 +37,7 @@ public class GlobalExceptionHandler {
         return vehicleResponse;
     }
 
-    @ExceptionHandler({InvalidInputException.class})
+    @ExceptionHandler({InvalidInputException.class, BadRequestException.class})
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public @ResponseBody
     VehicleResponse handleInvalidInputException(final Exception exception,

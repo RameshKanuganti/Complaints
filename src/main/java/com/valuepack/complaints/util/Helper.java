@@ -1,7 +1,5 @@
 package com.valuepack.complaints.util;
 
-import org.joda.time.Days;
-
 import java.sql.Timestamp;
 import java.util.Date;
 
@@ -22,6 +20,18 @@ public class Helper {
         long diffDays = diff / (24 * 60 * 60 * 1000);
 
         return diffDays;
+    }
+
+    public int compareTimestamp(Timestamp time1, Timestamp time2) {
+
+        long l1 = time1.getTime();
+        long l2 = time2.getTime();
+        if (l2 > l1)
+            return 1;
+        else if (l1 > l2)
+            return -1;
+        else
+            return 0;
     }
 
 }

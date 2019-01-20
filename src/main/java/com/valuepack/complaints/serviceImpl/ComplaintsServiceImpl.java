@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -92,22 +93,7 @@ public class ComplaintsServiceImpl implements ComplaintsServiceI {
         List<Complaints> complaintsList = complaintsRepository.findAll();
         VehicleResponse vehicleResponse = new VehicleResponse();
         if (!StringUtils.isEmpty(complaintsList) && complaintsList.size() > 0) {
-            List<ComplaintsDTO> complaintsDTOList = new ArrayList<>();
-            for (Complaints complaints : complaintsList) {
-                ComplaintsDTO complaintsDTO = new ComplaintsDTO();
-                complaintsDTO.setId(complaints.getId());
-                complaintsDTO.setComplaintType(StringUtils.isEmpty(complaints.getComplaintType()) ? null : complaints.getComplaintType().getComplaintType());
-                complaintsDTO.setComplaintSeverity(StringUtils.isEmpty(complaints.getComplaintSeverity()) ? null : complaints.getComplaintSeverity().getComplaintSeverity());
-                complaintsDTO.setComplaintStatus(StringUtils.isEmpty(complaints.getComplaintStatus()) ? null : complaints.getComplaintStatus().getComplaintStatus());
-                complaintsDTO.setSubject(complaints.getSubject());
-                complaintsDTO.setDescription(complaints.getDescription());
-                complaintsDTO.setFilePath(complaints.getFilePath());
-                complaintsDTO.setNumberOfDaysTktOpened(Helper.compareTwoTimeStamps(complaints.getCreatedDate()));
-                complaintsDTO.setCreatedDate(complaints.getCreatedDate());
-                complaintsDTO.setFranchise(1l);
-                complaintsDTO.setAppUser(2l);
-                complaintsDTOList.add(complaintsDTO);
-            }
+            List<ComplaintsDTO> complaintsDTOList = getComplaintsDTOList(complaintsList);
             vehicleResponse.setMessage(messageService.getMessage("success.message"));
             vehicleResponse.setStatus(HttpStatus.OK.value());
             vehicleResponse.setPayLoad(complaintsDTOList);
@@ -116,6 +102,26 @@ public class ComplaintsServiceImpl implements ComplaintsServiceI {
         vehicleResponse.setMessage(messageService.getMessage("complaint.no"));
         vehicleResponse.setStatus(HttpStatus.OK.value());
         return vehicleResponse;
+    }
+
+    private List<ComplaintsDTO> getComplaintsDTOList(List<Complaints> complaintsList) {
+        List<ComplaintsDTO> complaintsDTOList = new ArrayList<>();
+        for (Complaints complaints : complaintsList) {
+            ComplaintsDTO complaintsDTO = new ComplaintsDTO();
+            complaintsDTO.setId(complaints.getId());
+            complaintsDTO.setComplaintType(StringUtils.isEmpty(complaints.getComplaintType()) ? null : complaints.getComplaintType().getComplaintType());
+            complaintsDTO.setComplaintSeverity(StringUtils.isEmpty(complaints.getComplaintSeverity()) ? null : complaints.getComplaintSeverity().getComplaintSeverity());
+            complaintsDTO.setComplaintStatus(StringUtils.isEmpty(complaints.getComplaintStatus()) ? null : complaints.getComplaintStatus().getComplaintStatus());
+            complaintsDTO.setSubject(complaints.getSubject());
+            complaintsDTO.setDescription(complaints.getDescription());
+            complaintsDTO.setFilePath(complaints.getFilePath());
+            complaintsDTO.setNumberOfDaysTktOpened(Helper.compareTwoTimeStamps(complaints.getCreatedDate()));
+            complaintsDTO.setCreatedDate(complaints.getCreatedDate());
+            complaintsDTO.setFranchise(1l);
+            complaintsDTO.setAppUser(2l);
+            complaintsDTOList.add(complaintsDTO);
+        }
+        return complaintsDTOList;
     }
 
     @Override
@@ -170,6 +176,28 @@ public class ComplaintsServiceImpl implements ComplaintsServiceI {
         } else {
             vehicleResponse.setStatus(HttpStatus.BAD_REQUEST.value());
             vehicleResponse.setMessage(messageService.getMessage("invalid.data"));
+            return vehicleResponse;
+        }
+    }
+
+    @Override
+    public VehicleResponse searchComplaintByDates(Timestamp fromTime, Timestamp toTime) {
+        VehicleResponse vehicleResponse = new VehicleResponse();
+        List<Complaints> complaintsList;
+        if (toTime != null) {
+            complaintsList = complaintsRepository.findByCreatedDateAfterAndCreatedDateBefore(fromTime, toTime);
+        } else {
+            complaintsList = complaintsRepository.findByCreatedDateAfter(fromTime);
+        }
+        if (!StringUtils.isEmpty(complaintsList) && complaintsList.size() > 0) {
+            List<ComplaintsDTO> complaintsDTOList = getComplaintsDTOList(complaintsList);
+            vehicleResponse.setMessage(messageService.getMessage("success.message"));
+            vehicleResponse.setStatus(HttpStatus.OK.value());
+            vehicleResponse.setPayLoad(complaintsDTOList);
+            return vehicleResponse;
+        } else {
+            vehicleResponse.setMessage(messageService.getMessage("complaint.no"));
+            vehicleResponse.setStatus(HttpStatus.BAD_REQUEST.value());
             return vehicleResponse;
         }
     }
