@@ -12,4 +12,6 @@ public interface RCTransferServiceI {
     VehicleResponse getAllRCTransfer();
 
     VehicleResponse deleteRCTransferById(Long rcId);
+
+    VehicleResponse getRCTransferById(Long rcId);
 }

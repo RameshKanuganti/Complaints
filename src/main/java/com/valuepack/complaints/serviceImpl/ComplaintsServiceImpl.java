@@ -128,14 +128,50 @@ public class ComplaintsServiceImpl implements ComplaintsServiceI {
                 complaintsRepository.delete(complaints);
                 vehicleResponse.setStatus(HttpStatus.OK.value());
                 vehicleResponse.setMessage(messageService.getMessage("delete.success"));
+            } else {
+                vehicleResponse.setStatus(HttpStatus.NOT_FOUND.value());
+                vehicleResponse.setMessage(messageService.getMessage("complaint.not.found"));
             }
-            vehicleResponse.setStatus(HttpStatus.BAD_REQUEST.value());
-            vehicleResponse.setMessage(messageService.getMessage("invalid.data"));
         } else {
             vehicleResponse.setStatus(HttpStatus.BAD_REQUEST.value());
             vehicleResponse.setMessage(messageService.getMessage("invalid.data"));
         }
         return vehicleResponse;
+    }
+
+    @Override
+    public VehicleResponse getAllComplaintById(Long complaintId) {
+        VehicleResponse vehicleResponse = new VehicleResponse();
+        if (complaintId > 0) {
+            Optional<Complaints> optionalComplaint = complaintsRepository.findById(complaintId);
+            if (optionalComplaint.isPresent()) {
+                Complaints complaints = optionalComplaint.get();
+                ComplaintsDTO complaintsDTO = new ComplaintsDTO();
+                complaintsDTO.setId(complaints.getId());
+                complaintsDTO.setComplaintType(StringUtils.isEmpty(complaints.getComplaintType()) ? null : complaints.getComplaintType().getComplaintType());
+                complaintsDTO.setComplaintSeverity(StringUtils.isEmpty(complaints.getComplaintSeverity()) ? null : complaints.getComplaintSeverity().getComplaintSeverity());
+                complaintsDTO.setComplaintStatus(StringUtils.isEmpty(complaints.getComplaintStatus()) ? null : complaints.getComplaintStatus().getComplaintStatus());
+                complaintsDTO.setSubject(complaints.getSubject());
+                complaintsDTO.setDescription(complaints.getDescription());
+                complaintsDTO.setFilePath(complaints.getFilePath());
+                complaintsDTO.setNumberOfDaysTktOpened(Helper.compareTwoTimeStamps(complaints.getCreatedDate()));
+                complaintsDTO.setCreatedDate(complaints.getCreatedDate());
+                complaintsDTO.setFranchise(1l);
+                complaintsDTO.setAppUser(2l);
+
+                vehicleResponse.setStatus(HttpStatus.OK.value());
+                vehicleResponse.setMessage(messageService.getMessage("success.message"));
+                vehicleResponse.setPayLoad(complaintsDTO);
+            } else {
+                vehicleResponse.setStatus(HttpStatus.NOT_FOUND.value());
+                vehicleResponse.setMessage(messageService.getMessage("complaint.not.found"));
+            }
+            return vehicleResponse;
+        } else {
+            vehicleResponse.setStatus(HttpStatus.BAD_REQUEST.value());
+            vehicleResponse.setMessage(messageService.getMessage("invalid.data"));
+            return vehicleResponse;
+        }
     }
 
     private Complaints saveComplaintMapping(ComplaintsDTO complaintsDTO, Complaints complaints) {

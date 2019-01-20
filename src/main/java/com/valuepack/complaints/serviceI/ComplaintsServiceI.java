@@ -12,4 +12,6 @@ public interface ComplaintsServiceI {
     VehicleResponse getAllComplaints();
 
     VehicleResponse deleteComplaint(Long complaintId);
+
+    VehicleResponse getAllComplaintById(Long complaintId);
 }
