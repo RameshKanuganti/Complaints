@@ -18,4 +18,5 @@ public interface ComplaintsServiceI {
     VehicleResponse getAllComplaintById(Long complaintId);
 
     VehicleResponse searchComplaintByDates(Timestamp fromTime, Timestamp toTime);
+
 }

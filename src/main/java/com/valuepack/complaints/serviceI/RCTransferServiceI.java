@@ -14,4 +14,6 @@ public interface RCTransferServiceI {
     VehicleResponse deleteRCTransferById(Long rcId);
 
     VehicleResponse getRCTransferById(Long rcId);
+
+    VehicleResponse searchComplaintByVehicleNumber(String vehicleNumber);
 }

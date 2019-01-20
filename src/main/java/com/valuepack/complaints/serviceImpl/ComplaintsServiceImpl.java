@@ -47,7 +47,6 @@ public class ComplaintsServiceImpl implements ComplaintsServiceI {
                 complaints = new Complaints();
                 saveComplaintMapping(complaintsDTO, complaints);
                 vehicleResponse.setStatus(HttpStatus.OK.value());
-                vehicleResponse.setPayLoad(complaints);
                 vehicleResponse.setMessage(messageService.getMessage("complaint.save"));
                 return vehicleResponse;
             }

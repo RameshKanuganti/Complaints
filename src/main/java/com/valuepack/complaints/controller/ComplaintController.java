@@ -77,9 +77,9 @@ public class ComplaintController {
                     throw new BadRequestException("Timestamp should be in dd-MM-yyyy");
                 }
             }
-
         } else {
             throw new InvalidInputException("Timestamp should not be null");
         }
     }
+
 }

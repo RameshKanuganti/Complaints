@@ -36,6 +36,9 @@ public class RCTransferController {
     public VehicleResponse deleteRCTransfer(@PathVariable final Long rcId) throws Exception {
         return rcTransferServiceI.deleteRCTransferById(rcId);
     }
-
+    @GetMapping("/rc-transfer/search")
+    public VehicleResponse getComplaintsSearch(@RequestParam(value = "vehicleNumber", required = true) String vehicleNumber) throws Exception {
+        return rcTransferServiceI.searchComplaintByVehicleNumber(vehicleNumber);
+    }
 
 }

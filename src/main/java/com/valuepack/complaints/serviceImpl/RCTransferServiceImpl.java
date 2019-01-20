@@ -62,21 +62,7 @@ public class RCTransferServiceImpl implements RCTransferServiceI {
         List<RCTransfer> rcTransferList = rcTransferRepository.findAll();
         VehicleResponse vehicleResponse = new VehicleResponse();
         if (!StringUtils.isEmpty(rcTransferList) && rcTransferList.size() > 0) {
-            List<RCTransferDTO> rcTransferDTOList = new ArrayList<>();
-            for (RCTransfer rcTransfer : rcTransferList) {
-                RCTransferDTO rcTransferDTO = new RCTransferDTO();
-                rcTransferDTO.setId(rcTransfer.getId());
-                rcTransferDTO.setVehicleNumber(rcTransfer.getVehicleNumber());
-                rcTransferDTO.setDateOfSale(rcTransfer.getDateOfSale());
-                rcTransferDTO.setHypothecationNOCRecorded(rcTransfer.getHypothecationNOCRecorded());
-                rcTransferDTO.setHypothecationNOCDateRecorded(rcTransfer.getHypothecationNOCDateRecorded());
-                rcTransferDTO.setDocumentSubmittedToRTC(rcTransfer.getDocumentSubmittedToRTC());
-                rcTransferDTO.setDocumentSubmittedToRTCDate(rcTransfer.getDocumentSubmittedToRTCDate());
-                rcTransferDTO.setNewRCIssued(rcTransfer.getNewRCIssued());
-                rcTransferDTO.setNewRCIssuedDate(rcTransfer.getNewRCIssuedDate());
-                rcTransferDTO.setUploadNewRCCopy(rcTransfer.getUploadNewRCCopy());
-                rcTransferDTOList.add(rcTransferDTO);
-            }
+            List<RCTransferDTO> rcTransferDTOList = mapAndGetRcTransferDTOList(rcTransferList);
             vehicleResponse.setMessage(messageService.getMessage("success.message"));
             vehicleResponse.setStatus(HttpStatus.OK.value());
             vehicleResponse.setPayLoad(rcTransferDTOList);
@@ -87,6 +73,25 @@ public class RCTransferServiceImpl implements RCTransferServiceI {
             vehicleResponse.setStatus(HttpStatus.OK.value());
             return vehicleResponse;
         }
+    }
+
+    private List<RCTransferDTO> mapAndGetRcTransferDTOList(List<RCTransfer> rcTransferList) {
+        List<RCTransferDTO> rcTransferDTOList = new ArrayList<>();
+        for (RCTransfer rcTransfer : rcTransferList) {
+            RCTransferDTO rcTransferDTO = new RCTransferDTO();
+            rcTransferDTO.setId(rcTransfer.getId());
+            rcTransferDTO.setVehicleNumber(rcTransfer.getVehicleNumber());
+            rcTransferDTO.setDateOfSale(rcTransfer.getDateOfSale());
+            rcTransferDTO.setHypothecationNOCRecorded(rcTransfer.getHypothecationNOCRecorded());
+            rcTransferDTO.setHypothecationNOCDateRecorded(rcTransfer.getHypothecationNOCDateRecorded());
+            rcTransferDTO.setDocumentSubmittedToRTC(rcTransfer.getDocumentSubmittedToRTC());
+            rcTransferDTO.setDocumentSubmittedToRTCDate(rcTransfer.getDocumentSubmittedToRTCDate());
+            rcTransferDTO.setNewRCIssued(rcTransfer.getNewRCIssued());
+            rcTransferDTO.setNewRCIssuedDate(rcTransfer.getNewRCIssuedDate());
+            rcTransferDTO.setUploadNewRCCopy(rcTransfer.getUploadNewRCCopy());
+            rcTransferDTOList.add(rcTransferDTO);
+        }
+        return rcTransferDTOList;
     }
 
     @Override
@@ -170,9 +175,33 @@ public class RCTransferServiceImpl implements RCTransferServiceI {
         return vehicleResponse;
     }
 
+    @Override
+    public VehicleResponse searchComplaintByVehicleNumber(String vehicleNumber) {
+        VehicleResponse vehicleResponse = new VehicleResponse();
+        if (!StringUtils.isEmpty(vehicleNumber)) {
+            List<RCTransfer> rcTransferList = rcTransferRepository.findByVehicleNumber(vehicleNumber.replaceAll(" ", ""));
+            if (!StringUtils.isEmpty(rcTransferList) && rcTransferList.size() > 0) {
+                List<RCTransferDTO> rcTransferDTOList = mapAndGetRcTransferDTOList(rcTransferList);
+                vehicleResponse.setMessage(messageService.getMessage("success.message"));
+                vehicleResponse.setStatus(HttpStatus.OK.value());
+                vehicleResponse.setPayLoad(rcTransferDTOList);
+                return vehicleResponse;
+
+            } else {
+                vehicleResponse.setMessage(messageService.getMessage("rc.no.vehicle"));
+                vehicleResponse.setStatus(HttpStatus.NOT_FOUND.value());
+                return vehicleResponse;
+            }
+        }else{
+            vehicleResponse.setStatus(HttpStatus.BAD_REQUEST.value());
+            vehicleResponse.setMessage(messageService.getMessage("invalid.data"));
+            return vehicleResponse;
+        }
+    }
+
     private RCTransfer saveRCTransferMapping(RCTransferDTO rcTransferDTO, RCTransfer rcTransfer) {
         if (!StringUtils.isEmpty(rcTransferDTO.getVehicleNumber())) {
-            rcTransfer.setVehicleNumber(rcTransferDTO.getVehicleNumber());
+            rcTransfer.setVehicleNumber(rcTransferDTO.getVehicleNumber().replaceAll(" ", ""));
         }
         if (!StringUtils.isEmpty(rcTransferDTO.getDateOfSale())) {
             rcTransfer.setDateOfSale(rcTransferDTO.getDateOfSale());
