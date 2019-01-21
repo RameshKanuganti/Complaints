@@ -80,7 +80,7 @@ public class SoldCaseControllerImpl implements SoldCaseControllerI {
             soldCase.setVehicleNo(soldCaseDTO.getVehicleNo());
         }
         if (!StringUtils.isEmpty(soldCaseDTO.getModelNo())) {
-            soldCase.setVehicleNo(soldCaseDTO.getModelNo());
+            soldCase.setModelNo(soldCaseDTO.getModelNo());
         }
         if (!StringUtils.isEmpty(soldCaseDTO.getEstimatedSalePrice())) {
             soldCase.setEstimatedSalePrice(soldCaseDTO.getEstimatedSalePrice());
@@ -103,7 +103,7 @@ public class SoldCaseControllerImpl implements SoldCaseControllerI {
                     documents.setDocumentImageUrl(documentsDTO.getDocumentImageUrl());
                 }
                 if (!StringUtils.isEmpty(documentsDTO.getDocumentName())) {
-                    documents.setDocumentImageUrl(documentsDTO.getDocumentName());
+                    documents.setDocumentName(documentsDTO.getDocumentName());
                 }
                 documentsList.add(documents);
             }

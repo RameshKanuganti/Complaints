@@ -15,8 +15,8 @@ public class Documents extends BaseEntity {
     private String documentImageUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "sold_case_id")
-    private SoldCase soldCase;
+    @JoinColumn(name = "soldcase_id", nullable = false)
+    private SoldCase soldcase;
 
     public Long getId() {
         return id;
@@ -42,11 +42,11 @@ public class Documents extends BaseEntity {
         this.documentImageUrl = documentImageUrl;
     }
 
-    public SoldCase getSoldCase() {
-        return soldCase;
+    public SoldCase getSoldcase() {
+        return soldcase;
     }
 
-    public void setSoldCase(SoldCase soldCase) {
-        this.soldCase = soldCase;
+    public void setSoldcase(SoldCase soldcase) {
+        this.soldcase = soldcase;
     }
 }

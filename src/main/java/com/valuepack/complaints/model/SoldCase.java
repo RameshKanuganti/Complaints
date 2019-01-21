@@ -12,7 +12,7 @@ public class SoldCase extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    public Long id;
 
     @NotNull
     private String vehicleNo;
@@ -28,7 +28,7 @@ public class SoldCase extends BaseEntity {
 
     private Timestamp soldDate;
 
-    @OneToMany(mappedBy = "soldCase", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "soldcase", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Documents> documents = new ArrayList<>();
 
     public Long getId() {
